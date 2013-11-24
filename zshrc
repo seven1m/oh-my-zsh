@@ -121,13 +121,14 @@ bindkey "^[OF" end-of-line
 export PATH="$HOME/opt/bin:$PATH"
 export CDPATH="$CDPATH:$HOME/wp:$HOME/wp/devup/apps:$HOME/pp:$HOME/cp"
 
-eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
+which keychain > /dev/null
+[[ $? == 0 ]] && eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
 
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
-source $HOME/.rvm/scripts/rvm
+[[ -d $HOME/.rvm ]] && source $HOME/.rvm/scripts/rvm
 
 # retain cwd when opening new tab - https://bugs.launchpad.net/ubuntu-gnome/+bug/1193993
-. /etc/profile.d/vte.sh
+[[ -e /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
 
 [[ -e $HOME/.zshrc.local ]] && source $HOME/.zshrc.local
