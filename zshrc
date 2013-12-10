@@ -26,6 +26,9 @@ export GPGKEY=12ED223E
 
 # git aliases
 alias gs='git status'
+alias gco='git checkout'
+alias gph='git push'
+alias gpl='git pull'
 alias ga='git add -A'
 alias gd='git diff'
 alias gap='git add -p'
@@ -33,6 +36,7 @@ alias gam='git commit --amend'
 alias gl='git log --stat'
 alias gp='git pull'
 alias gpr='git pull --rebase'
+alias gfo='git fetch origin'
 alias grc='git rebase --continue'
 alias gr='git reset HEAD'
 alias grb='git rebase'
