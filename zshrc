@@ -65,6 +65,14 @@ alias bi="bundle install"
 alias bu='bundle update'
 alias pr='pry -r ./config/environment.rb'
 
+# hide (rename) file
+function hide() {
+  mv $1{,.hide}
+}
+function show() {
+  mv $1{.hide,}
+}
+
 # zeus
 alias zw='while [ ! -e .zeus.sock ]; do sleep 1; done; $@'
 alias zc='zeus cucumber -r features --no-source'
