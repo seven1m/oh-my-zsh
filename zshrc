@@ -137,9 +137,6 @@ which keychain > /dev/null
 
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
-# retain cwd when opening new tab - https://bugs.launchpad.net/ubuntu-gnome/+bug/1193993
-[[ -e /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
-
 [[ -e $HOME/.zshrc.local ]] && source $HOME/.zshrc.local
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
