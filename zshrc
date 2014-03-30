@@ -88,7 +88,6 @@ function zr() {
 alias -g hosts='/etc/hosts'
 
 # misc aliases
-alias rsync='rsync --partial -a --progress --stats $@'
 alias chrome-proxy='chromium --proxy-server=socks5://localhost:9999 %U --proxy-bypass-list=localhost,127.0.0.1'
 alias clip='xclip -selection clipboard'
 alias serve='ruby -rwebrick -e"s=WEBrick::HTTPServer.new(:Port => 3000, :DocumentRoot => Dir.pwd); trap(%q(INT)){ s.shutdown }; s.start"'
