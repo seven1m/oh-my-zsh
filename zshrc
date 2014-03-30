@@ -7,7 +7,7 @@ export ZSH_THEME="josh"
 export DISABLE_AUTO_UPDATE="true"
 
 # Plugins - Look in ~/.oh-my-zsh/plugins/
-plugins=(git rails tmuxinator)
+plugins=(git osx rails tmuxinator)
 
 source $ZSH/oh-my-zsh.sh
 
