@@ -139,4 +139,5 @@ which keychain > /dev/null
 
 [[ -e $HOME/.zshrc.local ]] && source $HOME/.zshrc.local
 
+[[ -d $HOME/.rvm ]] && source $HOME/.rvm/scripts/rvm
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
