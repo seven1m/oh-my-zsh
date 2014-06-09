@@ -160,4 +160,7 @@ which keychain > /dev/null
 [[ -d $HOME/.rvm ]] && source $HOME/.rvm/scripts/rvm
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
+# prefer brew-installed binaries
+PATH=$HOME/bin:/usr/local/bin:$PATH
+
 export PULSAR_CONF_REPO="ministrycentered/pco-deploy"
