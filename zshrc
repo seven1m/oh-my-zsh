@@ -7,7 +7,7 @@ export ZSH_THEME="josh"
 export DISABLE_AUTO_UPDATE="true"
 
 # Plugins - Look in ~/.oh-my-zsh/plugins/
-plugins=(git osx rails tmuxinator)
+plugins=(git osx rails tmuxinator zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -15,6 +15,9 @@ ZSH_THEME_GIT_PROMPT_PREFIX="%{$green%}("
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$green%}) %{$fg[yellow]%}✗%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$green%})"
+
+ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 
 export EDITOR="vim"
 export GIT_EDITOR="vim"
