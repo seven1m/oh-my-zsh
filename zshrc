@@ -100,7 +100,8 @@ function zr() {
 alias -g hosts='/etc/hosts'
 
 # misc aliases
-alias chrome-proxy='chromium --proxy-server=socks5://localhost:9999 %U --proxy-bypass-list=localhost,127.0.0.1'
+alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+alias chrome-proxy='chrome --proxy-server=socks5://localhost:9999 %U --proxy-bypass-list=localhost,127.0.0.1'
 alias clip='xclip -selection clipboard'
 alias screenshot='gnome-screenshot --interactive'
 alias tx='tmuxinator'
