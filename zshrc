@@ -50,9 +50,13 @@ alias gsta='git stash apply'
 alias gnotrack='git update-index --assume-unchanged'
 alias gtrack='git update-index --no-assume-unchanged'
 alias glistnotrack='git ls-files -v | grep "^h"'
-function gsu() {
-  branch=`git status | head -n1 | awk '{ print $4 }'`
-  alias gsu='git br --set-upstream-to=origin/$branch $branch'
+alias gsup='git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`'
+alias gclean='git branch --merged | grep -v master | xargs -n 1 git branch -d'
+
+function gpull() {
+  url=`git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
+  branch=`git symbolic-ref --short HEAD | sed 's/\//;/g'`
+  open "$url/compare/$branch?expand=1"
 }
 
 # vagrant aliases
