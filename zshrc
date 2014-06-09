@@ -147,7 +147,7 @@ unsetopt correct_all
 bindkey "^[OH" beginning-of-line
 bindkey "^[OF" end-of-line
 
-export PATH="$HOME/opt/bin:$PATH"
+export PATH="$HOME/opt/bin:$PATH:$HOME/code/pco/bin"
 export CDPATH="$CDPATH:$HOME/wp:$HOME/wp/devup/apps:$HOME/pp:$HOME/cp"
 
 which keychain > /dev/null
@@ -159,3 +159,5 @@ which keychain > /dev/null
 
 [[ -d $HOME/.rvm ]] && source $HOME/.rvm/scripts/rvm
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+export PULSAR_CONF_REPO="ministrycentered/pco-deploy"
