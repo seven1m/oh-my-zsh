@@ -116,12 +116,21 @@ function zr() {
 alias -g hosts='/etc/hosts'
 
 # misc aliases
-alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias chrome-proxy='chrome --proxy-server=socks5://localhost:9999 %U --proxy-bypass-list=localhost,127.0.0.1'
 alias clip='xclip -selection clipboard'
 alias screenshot='gnome-screenshot --interactive'
 alias tx='tmuxinator'
 alias ts='tmuxinator start'
+
+function crush() {
+  pngcrush $1 $1.crushed && mv $1.crushed $1
+}
+
+function mov2gif() {
+  base="${1%%.*}"
+  ffmpeg -i $1 -pix_fmt pal8 -r 12 -vf scale=iw/2:ih/2 -loop 0 $base.temp.gif
+  gifsicle --optimize=3 $base.temp.gif > $base.gif
+}
 
 # web server for the current directory
 function serve() {
