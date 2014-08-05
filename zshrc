@@ -53,10 +53,26 @@ alias glistnotrack='git ls-files -v | grep "^h"'
 alias gsup='git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`'
 alias gclean='git branch --merged | grep -v master | xargs -n 1 git branch -d'
 
-function gpull() {
+function ghpull() {
   url=`git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
-  branch=`git symbolic-ref --short HEAD | sed 's/\//;/g'`
-  open "$url/compare/$branch?expand=1"
+  branch=`git symbolic-ref --short HEAD`
+  if [ -z "$1" ]; then
+    other_branch="master"
+  else
+    other_branch=$1
+  fi
+  open "$url/compare/$other_branch...$branch?expand=1"
+}
+
+function ghcommit() {
+  url=`git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
+  branch=`git symbolic-ref --short HEAD`
+  if [ -z "$1" ]; then
+    commit=`git rev-parse HEAD`
+  else
+    commit=$1
+  fi
+  open "$url/commit/$commit"
 }
 
 # vagrant aliases
