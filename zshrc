@@ -191,4 +191,10 @@ PATH=$HOME/bin:/usr/local/bin:$PATH
 
 export PULSAR_CONF_REPO="ministrycentered/pco-deploy"
 
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+export GOPATH="$HOME/go"
+
+
 alias vim="echo 'nope'"
