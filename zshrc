@@ -52,6 +52,7 @@ alias gtrack='git update-index --no-assume-unchanged'
 alias glistnotrack='git ls-files -v | grep "^h"'
 alias gsup='git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`'
 alias gclean='git branch --merged | grep -v master | xargs -n 1 git branch -d'
+alias gbranches="git branch | ruby -e \"puts STDIN.read.split(/\\n/).map { |b| [b.strip, %x(git log --format='%ai %h %s' #{b} | head -1), ''] }.sort_by { |_, c, _| c }\""
 
 function ghpull() {
   url=`git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
