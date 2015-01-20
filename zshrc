@@ -186,9 +186,6 @@ which keychain > /dev/null
 
 [[ -e $HOME/.zshrc.local ]] && source $HOME/.zshrc.local
 
-[[ -d $HOME/.rvm ]] && source $HOME/.rvm/scripts/rvm
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
 # prefer brew-installed binaries
 PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -199,3 +196,5 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 export GOPATH="$HOME/go"
 
+[[ -d $HOME/.rvm ]] && source $HOME/.rvm/scripts/rvm
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
