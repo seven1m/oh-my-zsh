@@ -19,9 +19,11 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$green%})"
 ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 
-export EDITOR="emacs"
-export GIT_EDITOR="emacs"
+export EDITOR="vim"
+export GIT_EDITOR="vim"
 export READNULLCMD="less"
+
+alias e='emacs'
 
 export TERM="xterm-256color"
 
@@ -196,5 +198,3 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 export GOPATH="$HOME/go"
 
-
-alias vim="echo 'nope'"
