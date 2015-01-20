@@ -87,6 +87,7 @@ alias rc="spring rails console"
 alias rs="spring rails server"
 alias rg="spring rails generate"
 alias rd="spring rails dbconsole"
+alias rdm="spring rake db:migrate && spring rake db:migrate RAILS_ENV=test"
 alias bi="bundle install"
 alias bu='bundle update'
 alias pr='pry -r ./config/environment.rb'
