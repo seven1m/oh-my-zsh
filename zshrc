@@ -188,8 +188,9 @@ function precmd() {
 }
 
 # upload image to imgur
+# put IMGUR_CLIENT_ID in .zshrc.local
 function imgur() {
-  curl -F "image=@$1" -F "key=$IMGUR_API_KEY" http://api.imgur.com/2/upload.xml | tail -n 1 | sed 's/.*<original>\([^\<]*\).*/\1/'
+  curl -F "image=@$1" -H "Authorization: Client-ID $IMGUR_CLIENT_ID" https://api.imgur.com/3/image | ruby -rjson -e "puts JSON.parse(ARGF.read)['data']['link']"
 }
 
 # productivity
