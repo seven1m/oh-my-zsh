@@ -128,6 +128,15 @@ function show() {
   mv $1{.hide,}
 }
 
+# emacs client
+function e() {
+  if [[ -z "$1" ]]; then
+    emacsclient -n .
+  else
+    emacsclient -n $@
+  fi
+}
+
 # zeus
 alias zw='while [ ! -e .zeus.sock ]; do sleep 1; done; $@'
 alias zc='zeus cucumber -r features --no-source'
