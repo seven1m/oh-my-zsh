@@ -151,13 +151,6 @@ function zr() {
 # global aliases
 alias -g hosts='/etc/hosts'
 
-# misc aliases
-alias chrome-proxy='chrome --proxy-server=socks5://localhost:9999 %U --proxy-bypass-list=localhost,127.0.0.1'
-alias clip='xclip -selection clipboard'
-alias screenshot='gnome-screenshot --interactive'
-alias tx='tmuxinator'
-alias ts='tmuxinator start'
-
 function crush() {
   pngcrush $1 $1.crushed && mv $1.crushed $1
 }
