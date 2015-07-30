@@ -224,3 +224,6 @@ export GOPATH="$HOME/go"
 
 [[ -d $HOME/.rvm ]] && source $HOME/.rvm/scripts/rvm
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+# added by travis gem
+[ -f /Users/timmorgan/.travis/travis.sh ] && source /Users/timmorgan/.travis/travis.sh
