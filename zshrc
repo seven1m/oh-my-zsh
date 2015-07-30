@@ -103,9 +103,18 @@ alias rg="spring rails generate"
 alias rd="spring rails dbconsole"
 alias rdm="spring rake db:migrate && spring rake db:migrate RAILS_ENV=test"
 alias bi="bundle install"
+alias bo="bundle open"
 alias bu='bundle update'
 alias pr='pry -r ./config/environment.rb'
-alias rw='watchr .watchr'
+alias tld='tail -f log/development.log'
+alias tlt='tail -f log/test.log'
+alias tlp='tail -f log/production.log'
+alias fs='foreman start'
+alias ow='observr .watchr'
+
+function bcd() {
+  cd $(bundle show $1)
+}
 
 function h2h() {
   html2haml $1.erb $1.haml && rm $1.erb
