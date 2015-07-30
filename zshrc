@@ -30,31 +30,45 @@ export TERM="xterm-256color"
 export GPGKEY=12ED223E
 
 # git aliases
-alias gs='git status'
-alias gco='git checkout'
-alias gph='git push'
-alias gpl='git pull'
+alias -- --="git checkout -"
 alias ga='git add -A'
-alias gd='git diff'
-alias gap='git add -p'
 alias gam='git commit --amend'
+alias gap='git add -p'
+alias gbranches="git branch | ruby -e \"puts STDIN.read.split(/\\n/).map { |b| [b.strip, %x(git log --format='%ai %h %s' #{b} | head -1), ''] }.sort_by { |_, c, _| c }\""
+alias gclean='git branch --merged | grep -v master | xargs -n 1 git branch -d'
+alias gco='git checkout'
+alias gcob="git checkout -b"
+alias gd='git diff'
+alias gdt='git tag -d $1 && git push origin :$1'
+alias gfo='git fetch origin'
 alias gl='git log --stat'
 alias gp='git pull'
+alias gph='git push'
+alias gpl='git pull'
 alias gpr='git pull --rebase'
-alias gfo='git fetch origin'
-alias grc='git rebase --continue'
 alias gr='git reset HEAD'
 alias grb='git rebase'
-alias gt="git tag -n | ruby -e \"puts STDIN.read.lines.sort_by { |t| t.split.first.sub(/^v/, '').sub(/\-rc/, '.1').sub(/\.beta/, '').split('.').map(&:to_i).tap { |v| v << 99 if v.length < 5 } }\""
-alias gdt='git tag -d $1 && git push origin :$1'
+alias grc='git rebase --continue'
+alias grs="[[ $(git symbolic-ref --short HEAD) == 'staging' ]] && git fetch origin && git reset --hard origin/staging"
+alias gs='git status'
 alias gst='git stash'
 alias gsta='git stash apply'
-alias gnotrack='git update-index --assume-unchanged'
-alias gtrack='git update-index --no-assume-unchanged'
-alias glistnotrack='git ls-files -v | grep "^h"'
 alias gsup='git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`'
-alias gclean='git branch --merged | grep -v master | xargs -n 1 git branch -d'
-alias gbranches="git branch | ruby -e \"puts STDIN.read.split(/\\n/).map { |b| [b.strip, %x(git log --format='%ai %h %s' #{b} | head -1), ''] }.sort_by { |_, c, _| c }\""
+alias gt="git tag -n | ruby -e \"puts STDIN.read.lines.sort_by { |t| t.split.first.sub(/^v/, '').sub(/\-rc/, '.1').sub(/\.beta/, '').split('.').map(&:to_i).tap { |v| v << 99 if v.length < 5 } }\""
+
+function gcot() {
+  git checkout --theirs $1
+  git add $1
+}
+
+function gri() {
+  if [ -z "$1" ]; then
+    sha1=$(git log --format="format:%h %ae" | ruby -e "authors=ARGF.read.split(\"\\n\"); me=authors.first.split.last; puts authors.detect { |a| a.split.last != me }.split.first")
+  else
+    count=$1
+  fi
+  git rebase -i $sha1
+}
 
 function ghpull() {
   url=`git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
