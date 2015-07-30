@@ -227,3 +227,5 @@ PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
 # added by travis gem
 [ -f /Users/timmorgan/.travis/travis.sh ] && source /Users/timmorgan/.travis/travis.sh
+
+source /Users/timmorgan/.iterm2_shell_integration.zsh
