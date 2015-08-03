@@ -91,6 +91,15 @@ function ghcommit() {
   open "$url/commit/$commit"
 }
 
+function wip() {
+  git add .
+  git commit -m "wip"
+}
+
+function unwip() {
+  git log --oneline | head -1 | grep wip && git reset HEAD\^
+}
+
 # vagrant aliases
 alias vup='vagrant up --provision'
 alias vh='vagrant halt'
