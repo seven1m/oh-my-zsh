@@ -33,10 +33,13 @@ alias -- --="git checkout -"
 alias ga='git add -A'
 alias gam='git commit --amend'
 alias gap='git add -p'
-alias gbranches="git branch | ruby -e \"puts STDIN.read.split(/\\n/).map { |b| [b.strip, %x(git log --format='%ai %h %s' #{b} | head -1), ''] }.sort_by { |_, c, _| c }\""
+alias gbranches="git branch | grep -v \"master|staging\" | ruby -e \"puts STDIN.read.split(/\\n/).map { |b| [b.strip, %x(git log --format='%ai %h %s' #{b} | head -1)] }.sort_by(&:last).map(&:first)\""
 alias gclean='git branch --merged | grep -v master | xargs -n 1 git branch -d'
 alias gco='git checkout'
 alias gcob="git checkout -b"
+alias gcl="git checkout $(gbranches | tail -1)"
+alias gcm="git checkout master"
+alias gcs="git checkout staging"
 alias gd='git diff'
 alias gdt='git tag -d $1 && git push origin :$1'
 alias gfo='git fetch origin'
@@ -54,6 +57,8 @@ alias gst='git stash'
 alias gsta='git stash apply'
 alias gsup='git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`'
 alias gt="git tag -n | ruby -e \"puts STDIN.read.lines.sort_by { |t| t.split.first.sub(/^v/, '').sub(/\-rc/, '.1').sub(/\.beta/, '').split('.').map(&:to_i).tap { |v| v << 99 if v.length < 5 } }\""
+alias master='git checkout master'
+alias staging='git checkout staging'
 
 function gcot() {
   git checkout --theirs $1
@@ -69,26 +74,39 @@ function gri() {
   git rebase -i $sha1
 }
 
+function github_url() {
+  echo `git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
+}
+
+function github_branch() {
+  echo `git symbolic-ref --short HEAD`
+}
+
+function ghurl() {
+  branch=$(github_branch)
+  if [[ "$branch" = "master" ]]; then
+    open $(github_url)
+  else
+    open "$(github_url)/tree/$branch"
+  fi
+}
+
 function ghpull() {
-  url=`git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
-  branch=`git symbolic-ref --short HEAD`
   if [ -z "$1" ]; then
     other_branch="master"
   else
     other_branch=$1
   fi
-  open "$url/compare/$other_branch...$branch?expand=1"
+  open "$(github_url)/compare/$other_branch...$(github_branch)?expand=1"
 }
 
 function ghcommit() {
-  url=`git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
-  branch=`git symbolic-ref --short HEAD`
   if [ -z "$1" ]; then
     commit=`git rev-parse HEAD`
   else
     commit=$1
   fi
-  open "$url/commit/$commit"
+  open "$(github_url)/commit/$commit"
 }
 
 function wip() {
