@@ -7,7 +7,7 @@ export ZSH_THEME="josh"
 export DISABLE_AUTO_UPDATE="true"
 
 # Plugins - Look in ~/.oh-my-zsh/plugins/
-plugins=(git osx rails tmuxinator zsh-syntax-highlighting)
+plugins=(git osx rails tmuxinator zsh-syntax-highlighting rbenv)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -105,20 +105,21 @@ alias vup='vagrant up --provision'
 alias vh='vagrant halt'
 
 # rails aliases
-alias rc="spring rails console"
-alias rs="spring rails server"
-alias rg="spring rails generate"
-alias rd="spring rails dbconsole"
-alias rdm="spring rake db:migrate && spring rake db:migrate RAILS_ENV=test"
+alias rc="bundle exec spring rails console"
+alias rs="bundle exec spring rails server"
+alias rg="bundle exec spring rails generate"
+alias rd="bundle exec spring rails dbconsole"
+alias rdm="bundle exec spring rake db:migrate && spring rake db:migrate RAILS_ENV=test"
 alias bi="bundle install"
 alias bo="bundle open"
 alias bu='bundle update'
-alias pr='pry -r ./config/environment.rb'
+alias pr='bundle exec pry -r ./config/environment.rb'
 alias tld='tail -f log/development.log'
 alias tlt='tail -f log/test.log'
 alias tlp='tail -f log/production.log'
 alias fs='foreman start'
 alias ow='observr .watchr'
+alias b='bundle exec'
 
 function bcd() {
   cd $(bundle show $1)
@@ -230,10 +231,9 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 export GOPATH="$HOME/go"
 
-[[ -d $HOME/.rvm ]] && source $HOME/.rvm/scripts/rvm
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
 # added by travis gem
 [ -f /Users/timmorgan/.travis/travis.sh ] && source /Users/timmorgan/.travis/travis.sh
 
 source /Users/timmorgan/.iterm2_shell_integration.zsh
+
+eval "$(rbenv init -)"
