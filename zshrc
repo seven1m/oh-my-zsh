@@ -33,11 +33,9 @@ alias -- --="git checkout -"
 alias ga='git add -A'
 alias gam='git commit --amend'
 alias gap='git add -p'
-alias gbranches="git branch | grep -v \"master|staging\" | ruby -e \"puts STDIN.read.split(/\\n/).map { |b| [b.strip, %x(git log --format='%ai %h %s' #{b} | head -1)] }.sort_by(&:last).map(&:first)\""
 alias gclean='git branch --merged | grep -v master | xargs -n 1 git branch -d'
 alias gco='git checkout'
 alias gcob="git checkout -b"
-alias gcl="git checkout $(gbranches | tail -1)"
 alias gcm="git checkout master"
 alias gcs="git checkout staging"
 alias gd='git diff'
@@ -51,7 +49,6 @@ alias gpr='git pull --rebase'
 alias gr='git reset HEAD'
 alias grb='git rebase'
 alias grc='git rebase --continue'
-alias grs="[[ $(git symbolic-ref --short HEAD) == 'staging' ]] && git fetch origin && git reset --hard origin/staging"
 alias gs='git status'
 alias gst='git stash'
 alias gsta='git stash apply'
@@ -59,6 +56,24 @@ alias gsup='git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`'
 alias gt="git tag -n | ruby -e \"puts STDIN.read.lines.sort_by { |t| t.split.first.sub(/^v/, '').sub(/\-rc/, '.1').sub(/\.beta/, '').split('.').map(&:to_i).tap { |v| v << 99 if v.length < 5 } }\""
 alias master='git checkout master'
 alias staging='git checkout staging'
+
+function gbranches() {
+  current=$(git symbolic-ref --short HEAD)
+  git branch | \
+    grep -v "master\|staging\|$current" | \
+    ruby -e "puts STDIN.read.split(/\n/).map { |b| [b.strip, %x(git log --format='%ai %h %s' #{b} | head -1)] }.sort_by(&:last).map(&:first)"
+}
+
+unalias gcl
+function gcl() {
+  git checkout $(gbranches | tail -1)
+}
+
+function grs() {
+  if [[ $(git symbolic-ref --short HEAD) == 'staging' ]]; then
+    git fetch origin && git reset --hard origin/staging
+  fi
+}
 
 function gcot() {
   git checkout --theirs $1
