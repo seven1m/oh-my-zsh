@@ -164,17 +164,6 @@ function e() {
   fi
 }
 
-# zeus
-alias zw='while [ ! -e .zeus.sock ]; do sleep 1; done; $@'
-alias zc='zeus cucumber -r features --no-source'
-function zr() {
-  if [[ -z "$1" ]]; then
-    zeus rspec spec
-  else
-    zeus rspec $@
-  fi
-}
-
 # global aliases
 alias -g hosts='/etc/hosts'
 
