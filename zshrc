@@ -19,10 +19,9 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$green%})"
 ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 
-export EDITOR="nvim"
-export GIT_EDITOR="nvim"
+export EDITOR="vim"
+export GIT_EDITOR="vim"
 export READNULLCMD="less"
-alias vim="nvim"
 
 export TERM="xterm-256color"
 
