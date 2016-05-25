@@ -30,13 +30,10 @@ export GPGKEY=12ED223E
 # git aliases
 alias -- --="git checkout -"
 alias ga='git add -A'
-alias gam='git commit --amend'
+alias gam='git commit --amend -v'
 alias gap='git add -p'
 alias gclean='git branch --merged | grep -v master | xargs -n 1 git branch -d'
-alias gco='git checkout'
 alias gcob="git checkout -b"
-alias gcm="git checkout master"
-alias gcs="git checkout staging"
 alias gd='git diff'
 alias gdt='git tag -d $1 && git push origin :$1'
 alias gfo='git fetch origin'
@@ -51,10 +48,49 @@ alias grc='git rebase --continue'
 alias gs='git status'
 alias gst='git stash'
 alias gsta='git stash apply'
+alias gstp='git stash pop'
 alias gsup='git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`'
 alias gt="git tag -n | ruby -e \"puts STDIN.read.lines.sort_by { |t| t.split.first.sub(/^v/, '').sub(/\-rc/, '.1').sub(/\.beta/, '').split('.').map(&:to_i).tap { |v| v << 99 if v.length < 5 } }\""
-alias master='git checkout master'
-alias staging='git checkout staging'
+alias master='git checkout master && spring stop &>/dev/null'
+alias staging='git checkout staging && spring stop &>/dev/null'
+
+function reset_test_db() {
+  if [[ -e db/structure.sql ]]; then
+    schema="db:structure:load"
+  else
+    schema="db:schema:load"
+  fi
+  RAILS_ENV=test bundle exec rake db:drop db:create $schema db:migrate
+}
+
+function ship() {
+  if [[ -z "$(git diff --shortstat 2> /dev/null)" ]]; then
+    echo "Shipping..."
+    git checkout staging && \
+    git fetch origin && \
+    git reset --hard origin/staging && \
+    git merge --no-edit - && \
+    git push && \
+    pco deploy && \
+    git checkout -
+  else
+    echo "Index is dirty."
+  fi
+}
+
+function pc() {
+  app=${PWD##*/}
+  if [[ -z "$1" ]]; then
+    pco console $app staging
+  else
+    pco console $app $1
+  fi
+}
+
+function gco() {
+  git checkout $1
+  bundle exec spring stop &>/dev/null
+}
 
 function gbranches() {
   current=$(git symbolic-ref --short HEAD)
@@ -66,6 +102,7 @@ function gbranches() {
 unalias gcl
 function gcl() {
   git checkout $(gbranches | tail -1)
+  spring stop &>/dev/null
 }
 
 function grs() {
@@ -96,22 +133,38 @@ function github_branch() {
   echo `git symbolic-ref --short HEAD`
 }
 
-function ghurl() {
-  branch=$(github_branch)
-  if [[ "$branch" = "master" ]]; then
-    open $(github_url)
+function browser_open() {
+  if [[ $(psgrep Applications/Safari.app) != "" ]]; then
+    open -a Safari $@
   else
-    open "$(github_url)/tree/$branch"
+    open $@
   fi
 }
 
-function ghpull() {
+function ghurl() {
+  branch=$(github_branch)
+  if [[ "$branch" = "master" ]]; then
+    browser_open $(github_url)
+  else
+    browser_open "$(github_url)/tree/$branch"
+  fi
+}
+
+function ghcompare() {
   if [ -z "$1" ]; then
     other_branch="master"
   else
     other_branch=$1
   fi
-  open "$(github_url)/compare/$other_branch...$(github_branch)?expand=1"
+  url="$(github_url)/compare/$other_branch...$(github_branch)"
+  if [ -n "$2" ]; then
+    url="$url?expand=1";
+  fi
+  browser_open "$url"
+}
+
+function ghpull() {
+  ghcompare "$1" "expand"
 }
 
 function ghcommit() {
@@ -120,7 +173,16 @@ function ghcommit() {
   else
     commit=$1
   fi
-  open "$(github_url)/commit/$commit"
+  browser_open "$(github_url)/commit/$commit"
+}
+
+function circleci_url() {
+  echo `git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://circleci.com/gh/').sub(/\\.git$/, '')"`
+}
+
+function circle() {
+  branch=`git symbolic-ref --short HEAD | ruby -r cgi -e "puts CGI.escape(ARGF.read.strip)"`
+  browser_open "$(circleci_url)/tree/$branch"
 }
 
 function wip() {
@@ -137,28 +199,25 @@ alias vup='vagrant up --provision'
 alias vh='vagrant halt'
 
 # rails aliases
-alias rc="bundle exec spring rails console"
-alias rs="bundle exec spring rails server"
-alias rg="bundle exec spring rails generate"
-alias rd="bundle exec spring rails dbconsole"
-alias rdm="bundle exec spring rake db:migrate && spring rake db:migrate RAILS_ENV=test"
-alias bi="bundle install"
+alias b='bundle exec'
+alias bi="bundle install --jobs 4"
 alias bo="bundle open"
 alias bu='bundle update'
-alias pr='bundle exec pry -r ./config/environment.rb'
-alias tld='tail -f log/development.log'
-alias tlt='tail -f log/test.log'
-alias tlp='tail -f log/production.log'
+alias esl='eslint --fix app/assets/javascripts/**/*.js app/assets/javascripts/**/*.jsx'
 alias fs='foreman start'
 alias ow='observr .watchr'
-alias b='bundle exec'
+alias pr='bundle exec pry -r ./config/environment.rb'
+alias rc="bundle exec spring rails console"
+alias rd="bundle exec spring rails dbconsole"
+alias rdm="bundle exec spring rake db:migrate && bundle exec spring rake db:migrate RAILS_ENV=test"
+alias rg="bundle exec spring rails generate"
+alias rs="bundle exec spring rails server"
+alias tld='tail -f log/development.log'
+alias tlp='tail -f log/production.log'
+alias tlt='tail -f log/test.log'
 
 function bcd() {
   cd $(bundle show $1)
-}
-
-function h2h() {
-  html2haml $1.erb $1.haml && rm $1.erb
 }
 
 # hide (rename) file
