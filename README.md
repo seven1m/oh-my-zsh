@@ -7,6 +7,8 @@ Based on [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh).
     # pacman -S zsh
     # or
     # aptitude install zsh
+    # or
+    # brew install zsh
     cd
     git clone git@github.com:seven1m/oh-my-zsh.git .zsh
     ln -s .zsh/zshrc .zshrc
