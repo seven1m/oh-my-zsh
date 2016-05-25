@@ -284,6 +284,15 @@ function h() {
   fi
 }
 
+# weather
+function w() {
+  if [[ -z "$1" ]]; then
+    curl http://wttr.in/Tulsa
+  else
+    curl http://wttr.in/$1
+  fi
+}
+
 # annoying auto-correct
 unsetopt correct_all
 
