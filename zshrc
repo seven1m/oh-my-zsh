@@ -300,8 +300,8 @@ unsetopt correct_all
 bindkey "^[OH" beginning-of-line
 bindkey "^[OF" end-of-line
 
-export PATH="$HOME/opt/bin:$PATH:$HOME/code/pco/bin"
-export CDPATH="$CDPATH:$HOME/wp:$HOME/wp/devup/apps:$HOME/pp:$HOME/cp"
+export PATH="$HOME/opt/bin:$HOME/code/pco/bin:$PATH"
+export CDPATH="$CDPATH:$HOME/wp:$HOME/pp:$HOME/cp"
 
 which keychain > /dev/null
 [[ $? == 0 ]] && eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
