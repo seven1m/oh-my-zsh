@@ -64,8 +64,9 @@ function reset_test_db() {
 }
 
 function ship() {
-  if [[ -z "$(git diff --shortstat 2> /dev/null)" ]]; then
+  if [[ -z "$(git diff --shortstat 2> /dev/null)" && -z "$(git diff --cached --shortstat 2> /dev/null)" ]]; then
     echo "Shipping..."
+    pco vpn && \
     git checkout staging && \
     git fetch origin && \
     git reset --hard origin/staging && \
@@ -75,15 +76,6 @@ function ship() {
     git checkout -
   else
     echo "Index is dirty."
-  fi
-}
-
-function pc() {
-  app=${PWD##*/}
-  if [[ -z "$1" ]]; then
-    pco console $app staging
-  else
-    pco console $app $1
   fi
 }
 
@@ -126,7 +118,7 @@ function gri() {
 }
 
 function github_url() {
-  echo `git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://github.com/').sub(/\\.git$/, '')"`
+  echo `git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.*github\\.com./, 'https://github.com/').sub(/\\.git$/, '')"`
 }
 
 function github_branch() {
@@ -138,15 +130,6 @@ function browser_open() {
     open -a Safari $@
   else
     open $@
-  fi
-}
-
-function ghurl() {
-  branch=$(github_branch)
-  if [[ "$branch" = "master" ]]; then
-    browser_open $(github_url)
-  else
-    browser_open "$(github_url)/tree/$branch"
   fi
 }
 
@@ -177,7 +160,7 @@ function ghcommit() {
 }
 
 function circleci_url() {
-  echo `git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.+?:/, 'https://circleci.com/gh/').sub(/\\.git$/, '')"`
+  echo `git remote -v | grep origin | head -1 | ruby -e "puts ARGF.read.split[1].sub(/.*github\\.com./, 'https://circleci.com/gh/').sub(/\\.git$/, '')"`
 }
 
 function circle() {
@@ -187,7 +170,7 @@ function circle() {
 
 function wip() {
   git add .
-  git commit -m "wip"
+  git commit -m "wip" $@
 }
 
 function unwip() {
@@ -215,6 +198,12 @@ alias rs="bundle exec spring rails server"
 alias tld='tail -f log/development.log'
 alias tlp='tail -f log/production.log'
 alias tlt='tail -f log/test.log'
+
+function rdm_down() {
+  version=$(ls db/migrate | tail -1)
+  bundle exec spring rake db:migrate:down VERSION=$version
+  bundle exec spring rake db:migrate:down VERSION=$version RAILS_ENV=test
+}
 
 function bcd() {
   cd $(bundle show $1)
@@ -246,8 +235,11 @@ function crush() {
 
 function mov2gif() {
   base="${1%%.*}"
-  ffmpeg -i $1 -pix_fmt pal8 -r 12 -vf scale=iw/2:ih/2 -loop 0 $base.temp.gif
-  gifsicle --optimize=3 $base.temp.gif > $base.gif
+  palette="/tmp/palette.png"
+  filters="fps=15,scale=${2:-700}:-1:flags=lanczos"
+
+  ffmpeg -i $1 -vf "$filters,palettegen" -y $palette
+  ffmpeg -i $1 -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y $base.gif
 }
 
 # web server for the current directory
@@ -293,6 +285,15 @@ function w() {
   fi
 }
 
+# yarn
+function npm() {
+  if [[ -e yarn.lock ]]; then
+    echo "Use yarn silly."
+  else
+    /usr/local/bin/npm $@
+  fi
+}
+
 # annoying auto-correct
 unsetopt correct_all
 
@@ -300,7 +301,8 @@ unsetopt correct_all
 bindkey "^[OH" beginning-of-line
 bindkey "^[OF" end-of-line
 
-export PATH="$HOME/opt/bin:$HOME/code/pco/bin:$PATH"
+#export PATH="$HOME/opt/bin:$HOME/code/pco/bin:$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/opt/bin:$HOME/.cargo/bin:$PATH"
 export CDPATH="$CDPATH:$HOME/wp:$HOME/pp:$HOME/cp"
 
 which keychain > /dev/null
@@ -318,11 +320,27 @@ export PULSAR_CONF_REPO="ministrycentered/pco-deploy"
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
-export GOPATH="$HOME/go"
+export GOPATH="$HOME/Code/go"
 
 # added by travis gem
 [ -f /Users/timmorgan/.travis/travis.sh ] && source /Users/timmorgan/.travis/travis.sh
 
 source /Users/timmorgan/.iterm2_shell_integration.zsh
 
+alias dc="docker-compose"
+
 eval "$(rbenv init -)"
+
+eval "$(~/Code/pco/bin/pco init -)"
+
+# pco-box
+export PATH="$HOME/pco-box/bin:$PATH"
+function pco() {
+  if [[ "$1" == "box" ]]; then
+    shift
+    $HOME/pco-box/bin/box "$@"
+  else
+    command pco "$@"
+  fi
+}
+
