@@ -316,7 +316,7 @@ export GOPATH="$HOME/Code/go"
 # added by travis gem
 [ -f /Users/timmorgan/.travis/travis.sh ] && source /Users/timmorgan/.travis/travis.sh
 
-source /Users/timmorgan/.iterm2_shell_integration.zsh
+#source /Users/timmorgan/.iterm2_shell_integration.zsh
 
 alias dc="docker-compose"
 
