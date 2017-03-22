@@ -217,15 +217,6 @@ function show() {
   mv $1{.hide,}
 }
 
-# emacs client
-function e() {
-  if [[ -z "$1" ]]; then
-    emacsclient -n .
-  else
-    emacsclient -n $@
-  fi
-}
-
 # global aliases
 alias -g hosts='/etc/hosts'
 
