@@ -270,7 +270,7 @@ function h() {
 # weather
 function w() {
   if [[ -z "$1" ]]; then
-    curl http://wttr.in/Tulsa
+    curl http://wttr.in/Bixby
   else
     curl http://wttr.in/$1
   fi
