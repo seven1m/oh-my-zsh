@@ -126,10 +126,14 @@ function github_branch() {
 }
 
 function browser_open() {
-  if [[ $(psgrep Applications/Safari.app) != "" ]]; then
-    open -a Safari $@
+  if [[ "$(uname)" == "Darwin" ]]; then
+    if [[ $(psgrep Applications/Safari.app) != "" ]]; then
+      open -a Safari $@
+    else
+      open $@
+    fi
   else
-    open $@
+    chromium-browser $@
   fi
 }
 
@@ -322,7 +326,9 @@ alias dc="docker-compose"
 
 eval "$(rbenv init -)"
 
-eval "$(~/Code/pco/bin/pco init -)"
+if [[ -f ~/Code/pco/bin/pco ]]; then
+  eval "$(~/Code/pco/bin/pco init -)"
+fi
 
 # pco-box
 export PATH="$HOME/pco-box/bin:$PATH"
